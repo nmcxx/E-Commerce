@@ -13,7 +13,7 @@ namespace WebAPI.Models
         public int SizeID { get; set; }
         public int Stock { get; set; }
         public float Price { get; set; }
-        public int DiscountID { get; set; }
+        public int? DiscountID { get; set; }
 
         public virtual Product Product { get; set; }
         public virtual Color Color { get; set; }
