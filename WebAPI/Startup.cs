@@ -10,9 +10,12 @@ using Microsoft.Extensions.Logging;
 using Microsoft.OpenApi.Models;
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
+using System.Reflection;
 using System.Threading.Tasks;
 using WebAPI.Data;
+using WebAPI.Services.ColorService;
 
 namespace WebAPI
 {
@@ -33,12 +36,25 @@ namespace WebAPI
             services.AddSwaggerGen(c =>
             {
                 c.SwaggerDoc("v1", new OpenApiInfo { Title = "WebAPI", Version = "v1" });
+
+
+                // comments for the swagger 
+                var xmlFile = $"{Assembly.GetExecutingAssembly().GetName().Name}Swagger.xml";
+                var xmlPath = Path.Combine(AppContext.BaseDirectory, xmlFile);
+                c.IncludeXmlComments(xmlPath);
             });
 
             // connect sql
             services.AddDbContext<ApplicationDbContext>(options =>
                 options.UseSqlServer(
                     Configuration.GetConnectionString("E-Commerce")));
+
+            // DI 
+            services.AddScoped<IColorService, ColorService>();
+
+            // DI Auto Mapper
+            //services.AddAutoMapper(typeof(AutoMapperProfile).Assembly);
+
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

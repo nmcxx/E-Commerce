@@ -2,11 +2,14 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using AutoMapper.QueryableExtensions;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using WebAPI.Data;
 using WebAPI.Models;
+using WebAPI.Services.ColorService;
+using WebAPI.ViewModels;
 
 namespace WebAPI.Controllers
 {
@@ -15,17 +18,29 @@ namespace WebAPI.Controllers
     public class ColorController : ControllerBase
     {
         private readonly ApplicationDbContext _context;
+        //private readonly ColorService _colorService;
+        private readonly IColorService _service;
 
-        public ColorController(ApplicationDbContext context)
+        public ColorController(ApplicationDbContext context, IColorService service)
         {
             _context = context;
+            _service = service;
         }
+
+
+
 
         // GET: api/Color
         [HttpGet]
-        public async Task<ActionResult<IEnumerable<Color>>> GetColor()
+        public async Task<ActionResult<IEnumerable<ColorViewModel>>> GetColor()
         {
-            return await _context.Color.ToListAsync();
+            //return await _context.Color.ProjectTo<ColorViewModel>.ToListAsync();
+            return await _context.Color
+                .Select(x => new ColorViewModel
+                {
+                    Id = x.ID,
+                    Name = x.Name
+                }).ToListAsync();
         }
 
         // GET: api/Color/5
@@ -73,15 +88,31 @@ namespace WebAPI.Controllers
             return NoContent();
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <remarks>
+        /// Sample request:
+        /// 
+        ///     POST api/Color
+        ///     {
+        ///         "name": "Red"
+        ///     }
+        /// </remarks>
+        /// <param name="color" hide="true"></param>
+        /// <returns>A newly created color</returns>
+        /// <response code="201" examples="{'application/json' : {'id' : 0, 'name' : 'string'}}">Returns the newly created item</response>
+        /// <response code="204">If name item is exists</response>
+        /// <response code="400">If the name field is null or not string</response>
         // POST: api/Color
         // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
         [HttpPost]
-        public async Task<ActionResult<Color>> PostColor(Color color)
+        [ProducesResponseType(201)]
+        [ProducesResponseType(204)]
+        [ProducesResponseType(400)]
+        public ActionResult<ColorViewModel> PostColor(Color color)
         {
-            _context.Color.Add(color);
-            await _context.SaveChangesAsync();
-
-            return CreatedAtAction("GetColor", new { id = color.ID }, color);
+            return _service.AddColor(color).Result;
         }
 
         // DELETE: api/Color/5
