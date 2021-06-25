@@ -13,5 +13,6 @@ namespace WebAPI.Models
         public string Description { get; set; }
 
         public virtual Category Category { get; set; }
+        public ICollection<ProductDetails> ProductDetails { get; set; }
     }
 }
