@@ -1,5 +1,6 @@
 ﻿using Common.Models;
 using Common.ViewModels;
+using Microsoft.AspNetCore.Mvc;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -9,16 +10,16 @@ namespace WebAPI.Services.ColorService
 {
     public interface IColorService
     {
-        Task<IEnumerable<Color>> GetAllColor();
-        Task<Color> GetColorByName(string name);
-        Task<Color> GetColorById(int id);
-        Task<Color> GetColor(Color color);
-        Task<bool> DeleteColorById(int id);
-        Task<bool> DeleteColorByName(string name);
-        Task<bool> DeleteColor(Color color);
-        Task<ColorViewModel> AddColor(Color color);
-        Task<Color> EditColorById(int id, Color color);
-        Task<Color> EditColorByName(string name, Color color);
+        Task<ActionResult<IEnumerable<ColorViewModel>>> GetAllColor();
+        Task<ActionResult<Color>> GetColorByName(string name);
+        Task<ActionResult<Color>> GetColorById(int id);
+        Task<ActionResult<Color>> GetColor(Color color);
+        Task<IActionResult> DeleteColorById(int id);
+        Task<IActionResult> DeleteColorByName(string name);
+        Task<IActionResult> DeleteColor(Color color);
+        Task<ActionResult<ColorViewModel>> AddColor(Color color);
+        Task<IActionResult> EditColorById(int id, Color color);
+        Task<IActionResult> EditColorByName(string name, Color color);
         bool ColorExistsById(int id);
         bool ColorExistsByName(string name);
     }

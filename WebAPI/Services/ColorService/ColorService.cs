@@ -1,6 +1,7 @@
 ﻿using Common.Data;
 using Common.Models;
 using Common.ViewModels;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
@@ -9,7 +10,7 @@ using System.Threading.Tasks;
 
 namespace WebAPI.Services.ColorService
 {
-    public class ColorService : IColorService
+    public class ColorService : ControllerBase, IColorService
     {
         private readonly  ApplicationDbContext _context;
 
@@ -18,12 +19,11 @@ namespace WebAPI.Services.ColorService
             _context = context;
         }
 
-        public async Task<ColorViewModel> AddColor(Color color)
+        public async Task<ActionResult<ColorViewModel>> AddColor(Color color)
         {
-            //color.ID = 0;
-            if(ColorExistsByName(color.Name))
+            if (ColorExistsByName(color.Name))
             {
-                System.Diagnostics.Debug.WriteLine(GetColorByName(color.Name).Result.Name.ToString());
+                //System.Diagnostics.Debug.WriteLine(GetColorByName(color.Name).Result.Name.ToString());
                 return null;
             }
             _context.Color.Add(color);
@@ -37,6 +37,7 @@ namespace WebAPI.Services.ColorService
             };
 
             return result;
+            //return CreatedAtAction("GetColorById", new { id = product.ID }, product);
         }
 
         public bool ColorExistsById(int id)
@@ -46,56 +47,75 @@ namespace WebAPI.Services.ColorService
 
         public bool ColorExistsByName(string name)
         {
-            var a = _context.Color.Any(e => e.Name.Contains(name));
-            return a;
+            return _context.Color.Any(e => e.Name.Contains(name));
         }
 
-        public Task<bool> DeleteColor(Color color)
+        public Task<IActionResult> DeleteColor(Color color)
         {
             throw new NotImplementedException();
         }
 
-        public Task<bool> DeleteColorById(int id)
+        public Task<IActionResult> DeleteColorById(int id)
         {
             throw new NotImplementedException();
         }
 
-        public Task<bool> DeleteColorByName(string name)
+        public Task<IActionResult> DeleteColorByName(string name)
         {
             throw new NotImplementedException();
         }
 
-        public Task<Color> EditColorById(int id, Color color)
+        public async Task<IActionResult> EditColorById(int id, Color color)
+        {
+            _context.Entry(color).State = EntityState.Modified;
+
+            try
+            {
+                await _context.SaveChangesAsync();
+            }
+            catch (DbUpdateConcurrencyException)
+            {
+                if (!ColorExistsById(id))
+                {
+                    return NotFound();
+                }
+                else
+                {
+                    throw;
+                }
+            }
+
+            return NoContent();
+        }
+
+        public Task<IActionResult> EditColorByName(string name, Color color)
         {
             throw new NotImplementedException();
         }
 
-        public Task<Color> EditColorByName(string name, Color color)
+        public async Task<ActionResult<IEnumerable<ColorViewModel>>> GetAllColor()
         {
-            throw new NotImplementedException();
+            return await _context.Color
+               .Select(x => new ColorViewModel
+               {
+                   Id = x.ID,
+                   Name = x.Name
+               }).ToListAsync();
         }
 
-        public Task<IEnumerable<Color>> GetAllColor()
+        public async Task<ActionResult<Color>> GetColor(Color color)
         {
-            throw new NotImplementedException();
+            return await _context.Color.FindAsync(color);
         }
 
-        public Task<Color> GetColor(Color color)
+        public async Task<ActionResult<Color>> GetColorById(int id)
         {
-            throw new NotImplementedException();
+            return await _context.Color.FindAsync(id);
         }
 
-        public Task<Color> GetColorById(int id)
+        public async Task<ActionResult<Color>> GetColorByName(string name)
         {
-            throw new NotImplementedException();
-        }
-
-        public async Task<Color> GetColorByName(string name)
-        {
-            var color = await _context.Color.Where(c => c.Name.Contains(name)).FirstOrDefaultAsync();
-
-            return color;
-            //throw new NotImplementedException();
+            return await _context.Color.Where(c => c.Name.Contains(name)).FirstOrDefaultAsync();
         }
     }
 }

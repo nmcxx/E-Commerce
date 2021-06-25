@@ -9,7 +9,7 @@ using Common.ViewModels;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
-using Service.Services.ColorService;
+using WebAPI.Services.ColorService;
 
 namespace WebAPI.Controllers
 {
@@ -17,74 +17,48 @@ namespace WebAPI.Controllers
     [ApiController]
     public class ColorController : ControllerBase
     {
-        private readonly ApplicationDbContext _context;
         private readonly IColorService _service;
 
-        public ColorController(ApplicationDbContext context, IColorService service)
+        public ColorController(IColorService service)
         {
-            _context = context;
             _service = service;
         }
 
-
-
-
         // GET: api/Color
         [HttpGet]
-        public async Task<ActionResult<IEnumerable<ColorViewModel>>> GetColor()
+        public Task<ActionResult<IEnumerable<ColorViewModel>>> GetColor()
         {
-            //return await _context.Color.ProjectTo<ColorViewModel>.ToListAsync();
-            return await _context.Color
-                .Select(x => new ColorViewModel
-                {
-                    Id = x.ID,
-                    Name = x.Name
-                }).ToListAsync();
+            return _service.GetAllColor();
         }
 
         // GET: api/Color/5
         [HttpGet("{id}")]
-        public async Task<ActionResult<Color>> GetColor(int id)
+        public ActionResult<Color> GetColor(int id)
         {
-            var color = await _context.Color.FindAsync(id);
+            var color = _service.GetColorById(id);
 
-            if (color == null)
-            {
+            if (color.Result == null)
                 return NotFound();
-            }
 
-            return color;
+            return color.Result;
         }
 
         // PUT: api/Color/5
         // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
         [HttpPut("{id}")]
-        public async Task<IActionResult> PutColor(int id, Color color)
+        public IActionResult PutColor(int id, Color color)
         {
-            if (id != color.ID)
-            {
-                return BadRequest();
-            }
+            return null;
+            //if (id != color.ID)
+            //{
+            //    return BadRequest();
+            //}
 
-            _context.Entry(color).State = EntityState.Modified;
-
-            try
-            {
-                await _context.SaveChangesAsync();
-            }
-            catch (DbUpdateConcurrencyException)
-            {
-                if (!ColorExists(id))
-                {
-                    return NotFound();
-                }
-                else
-                {
-                    throw;
-                }
-            }
-
-            return NoContent();
+            //var result = _service.EditColorById(id, color);
+            //if (result.Result == false)
+            //    return NotFound();
+            //return NoContent();
+            
         }
 
         /// <summary>
@@ -116,23 +90,24 @@ namespace WebAPI.Controllers
 
         // DELETE: api/Color/5
         [HttpDelete("{id}")]
-        public async Task<IActionResult> DeleteColor(int id)
+        public IActionResult DeleteColor(int id)
         {
-            var color = await _context.Color.FindAsync(id);
-            if (color == null)
-            {
-                return NotFound();
-            }
+            //var result = _service.DeleteColorById(id);
+            //if (!result.Result)
+            //    return NotFound();
+            //return NoContent();
+            return null;
+            //var color = await _context.Color.FindAsync(id);
+            //if (color == null)
+            //{
+            //    return NotFound();
+            //}
 
-            _context.Color.Remove(color);
-            await _context.SaveChangesAsync();
+            //_context.Color.Remove(color);
+            //await _context.SaveChangesAsync();
 
-            return NoContent();
+            //return NoContent();
         }
 
-        private bool ColorExists(int id)
-        {
-            return _context.Color.Any(e => e.ID == id);
-        }
     }
 }
