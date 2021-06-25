@@ -3,13 +3,13 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using AutoMapper.QueryableExtensions;
+using Common.Data;
+using Common.Models;
+using Common.ViewModels;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
-using WebAPI.Data;
-using WebAPI.Models;
-using WebAPI.Services.ColorService;
-using WebAPI.ViewModels;
+using Service.Services.ColorService;
 
 namespace WebAPI.Controllers
 {
@@ -18,7 +18,6 @@ namespace WebAPI.Controllers
     public class ColorController : ControllerBase
     {
         private readonly ApplicationDbContext _context;
-        //private readonly ColorService _colorService;
         private readonly IColorService _service;
 
         public ColorController(ApplicationDbContext context, IColorService service)
@@ -101,7 +100,7 @@ namespace WebAPI.Controllers
         /// </remarks>
         /// <param name="color" hide="true"></param>
         /// <returns>A newly created color</returns>
-        /// <response code="201" examples="{'application/json' : {'id' : 0, 'name' : 'string'}}">Returns the newly created item</response>
+        /// <response code="201" examples="{'application/json' : {'name' : 'string'}}">Returns the newly created item</response>
         /// <response code="204">If name item is exists</response>
         /// <response code="400">If the name field is null or not string</response>
         // POST: api/Color

@@ -5,7 +5,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace WebAPI.Services.ColorService
+namespace Service.Services.ColorService
 {
     public interface IColorService
     {

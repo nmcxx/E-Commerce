@@ -1,3 +1,4 @@
+using Common.Data;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.HttpsPolicy;
@@ -8,14 +9,13 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 using Microsoft.OpenApi.Models;
+using Service.Services.ColorService;
 using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Reflection;
 using System.Threading.Tasks;
-using WebAPI.Data;
-using WebAPI.Services.ColorService;
 
 namespace WebAPI
 {
@@ -45,9 +45,11 @@ namespace WebAPI
             });
 
             // connect sql
-            services.AddDbContext<ApplicationDbContext>(options =>
-                options.UseSqlServer(
-                    Configuration.GetConnectionString("E-Commerce")));
+            //services.AddDbContext<ApplicationDbContext>(options =>
+            //    options.UseSqlServer(
+            //        Configuration.GetConnectionString("E-Commerce")));
+            services.AddDbContext<ApplicationDbContext>();
+            
 
             // DI 
             services.AddScoped<IColorService, ColorService>();

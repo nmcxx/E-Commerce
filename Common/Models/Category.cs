@@ -3,11 +3,13 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace WebAPI.ViewModels
+namespace Common.Models
 {
-    public class ColorViewModel
+    public class Category
     {
-        public int Id { get; set; }
+        public int ID { get; set; }
         public string Name { get; set; }
+
+        public virtual ICollection<Product> Product { get; set; }
     }
 }
