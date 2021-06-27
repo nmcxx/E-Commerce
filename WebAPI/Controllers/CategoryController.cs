@@ -7,102 +7,120 @@ using Common.Models;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using WebAPI.Services.CategoryService;
 
 namespace WebAPI.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    public class CategoryController : ControllerBase
+    public class CategoryController
     {
-        private readonly ApplicationDbContext _context;
+        private readonly ICategoryService _service;
 
-        public CategoryController(ApplicationDbContext context)
+        public CategoryController(ICategoryService service)
         {
-            _context = context;
+            _service = service;
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param></param>
+        /// <returns>All category</returns>
+        /// <response code="200">Returns all item</response>
         // GET: api/Category
         [HttpGet]
-        public async Task<ActionResult<IEnumerable<Category>>> GetCategory()
+        public Task<ActionResult<IEnumerable<Category>>> GetCategory()
         {
-            return await _context.Category.ToListAsync();
+            return _service.GetAllCategory();
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="id" hidden="true"></param>
+        /// <returns>Returns a single color</returns>
+        /// <response code="200">Returns a single category</response>
+        /// <response code="404">If id category is not found</response>
         // GET: api/Category/5
         [HttpGet("{id}")]
-        public async Task<ActionResult<Category>> GetCategory(int id)
+        [ProducesResponseType(404)]
+        public Task<ActionResult<Category>> GetCategory(int id)
         {
-            var category = await _context.Category.FindAsync(id);
-
-            if (category == null)
-            {
-                return NotFound();
-            }
-
-            return category;
+            return _service.GetCategoryById(id);
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <remarks>
+        /// Sample request:
+        /// 
+        ///     PUT api/Category
+        ///     {
+        ///         "id": 0,
+        ///         "name": "Red"
+        ///     }
+        /// </remarks>
+        /// <param name="id" hide="true"></param>
+        /// <param name="category"></param>
+        /// <body examples="{'application/json' : {'id' : 0,'name' : 'string'}}"></body>
+        /// <returns>A updated color</returns>
+        /// <response code="204">if the category has updated</response>
+        /// <response code="404" examples="hide">If id category is not found</response>
+        /// <response code="400">If the id param is does not match id category</response>
         // PUT: api/Category/5
         // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
         [HttpPut("{id}")]
-        public async Task<IActionResult> PutCategory(int id, Category category)
+        [ProducesResponseType(204)]
+        [ProducesResponseType(404)]
+        [ProducesResponseType(400)]
+        public Task<IActionResult> PutCategory(int id, Category category)
         {
-            if (id != category.ID)
-            {
-                return BadRequest();
-            }
-
-            _context.Entry(category).State = EntityState.Modified;
-
-            try
-            {
-                await _context.SaveChangesAsync();
-            }
-            catch (DbUpdateConcurrencyException)
-            {
-                if (!CategoryExists(id))
-                {
-                    return NotFound();
-                }
-                else
-                {
-                    throw;
-                }
-            }
-
-            return NoContent();
+            return _service.EditCategoryById(id, category);
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <remarks>
+        /// Sample request:
+        /// 
+        ///     POST api/Color
+        ///     {
+        ///         "id" : 0,
+        ///         "name": "Shirt"
+        ///     }
+        /// </remarks>
+        /// <param name="category"></param>
+        /// <returns>A newly created category</returns>
+        /// <response code="201" examples="{'application/json' : {'id' : 0, 'name' : 'string'}}">Returns the newly created item</response>
+        /// <response code="204">If name item is exists</response>
+        /// <response code="400">If the name field is null or not string</response>
         // POST: api/Category
         // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
         [HttpPost]
-        public async Task<ActionResult<Category>> PostCategory(Category category)
+        [ProducesResponseType(201)]
+        [ProducesResponseType(204)]
+        [ProducesResponseType(400)]
+        public Task<ActionResult<Category>> PostCategory(Category category)
         {
-            _context.Category.Add(category);
-            await _context.SaveChangesAsync();
-
-            return CreatedAtAction("GetCategory", new { id = category.ID }, category);
+            return _service.AddCategory(category);
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="id"></param>
+        /// <response code="204">if the category has deleted</response>
+        /// <response code="404">If id category is not found</response>
         // DELETE: api/Category/5
         [HttpDelete("{id}")]
-        public async Task<IActionResult> DeleteCategory(int id)
+        [ProducesResponseType(204)]
+        [ProducesResponseType(404)]
+        public Task<IActionResult> DeleteCategory(int id)
         {
-            var category = await _context.Category.FindAsync(id);
-            if (category == null)
-            {
-                return NotFound();
-            }
-
-            _context.Category.Remove(category);
-            await _context.SaveChangesAsync();
-
-            return NoContent();
-        }
-
-        private bool CategoryExists(int id)
-        {
-            return _context.Category.Any(e => e.ID == id);
+            return _service.DeleteCategoryById(id);
         }
     }
 }

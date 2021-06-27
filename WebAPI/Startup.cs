@@ -15,6 +15,7 @@ using System.IO;
 using System.Linq;
 using System.Reflection;
 using System.Threading.Tasks;
+using WebAPI.Services.CategoryService;
 using WebAPI.Services.ColorService;
 
 namespace WebAPI
@@ -53,6 +54,7 @@ namespace WebAPI
 
             // DI 
             services.AddScoped<IColorService, ColorService>();
+            services.AddScoped<ICategoryService, CategoryService>();
 
             // DI Auto Mapper
             //services.AddAutoMapper(typeof(AutoMapperProfile).Assembly);

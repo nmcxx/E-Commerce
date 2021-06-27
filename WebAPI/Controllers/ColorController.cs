@@ -45,7 +45,7 @@ namespace WebAPI.Controllers
         /// <param name="id" hidden="true"></param>
         /// <returns>Returns a single color</returns>
         /// <response code="200">Returns a single color</response>
-        /// <response code="404" examples="hide">If id color is not found</response>
+        /// <response code="404">If id color is not found</response>
         // GET: api/Color/5
         [ProducesResponseType(404)]
         [HttpGet("{id}")]
