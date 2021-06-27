@@ -23,8 +23,7 @@ namespace WebAPI.Services.ColorService
         {
             if (ColorExistsByName(color.Name))
             {
-                //System.Diagnostics.Debug.WriteLine(GetColorByName(color.Name).Result.Name.ToString());
-                return null;
+                return NoContent();
             }
             _context.Color.Add(color);
             await _context.SaveChangesAsync();
@@ -36,8 +35,7 @@ namespace WebAPI.Services.ColorService
                 Name = color.Name
             };
 
-            return result;
-            //return CreatedAtAction("GetColorById", new { id = product.ID }, product);
+            return Created("test",result);
         }
 
         public bool ColorExistsById(int id)
@@ -55,9 +53,18 @@ namespace WebAPI.Services.ColorService
             throw new NotImplementedException();
         }
 
-        public Task<IActionResult> DeleteColorById(int id)
+        public async Task<IActionResult> DeleteColorById(int id)
         {
-            throw new NotImplementedException();
+            var color = await _context.Color.FindAsync(id);
+            if (color == null)
+            {
+                return NotFound();
+            }
+
+            _context.Color.Remove(color);
+            await _context.SaveChangesAsync();
+
+            return NoContent();
         }
 
         public Task<IActionResult> DeleteColorByName(string name)
@@ -67,6 +74,11 @@ namespace WebAPI.Services.ColorService
 
         public async Task<IActionResult> EditColorById(int id, Color color)
         {
+            if (id != color.ID)
+            {
+                return BadRequest();
+            }
+
             _context.Entry(color).State = EntityState.Modified;
 
             try
@@ -110,7 +122,10 @@ namespace WebAPI.Services.ColorService
 
         public async Task<ActionResult<Color>> GetColorById(int id)
         {
-            return await _context.Color.FindAsync(id);
+            var result = await _context.Color.FindAsync(id);
+            if (result == null)
+                return NotFound();
+            return result;
         }
 
         public async Task<ActionResult<Color>> GetColorByName(string name)
