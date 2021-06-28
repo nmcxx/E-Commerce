@@ -4,6 +4,7 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
+using Microsoft.Extensions.Logging;
 using Microsoft.IdentityModel.Tokens;
 using System;
 using System.Collections.Generic;
@@ -24,12 +25,14 @@ namespace WebAPI.Controllers
         private readonly UserManager<IdentityUser> _userManager;
         private readonly RoleManager<IdentityRole> _roleManager;
         private readonly IConfiguration _configuration;
+        private readonly ILogger<UserController> _logger;
 
-        public UserController(UserManager<IdentityUser> userManager, RoleManager<IdentityRole> roleManager, IConfiguration configuration)
+        public UserController(UserManager<IdentityUser> userManager, RoleManager<IdentityRole> roleManager, IConfiguration configuration, ILogger<UserController> logger)
         {
             _userManager = userManager;
             _roleManager = roleManager;
             _configuration = configuration;
+            _logger = logger;
         }
 
 
@@ -46,7 +49,9 @@ namespace WebAPI.Controllers
         public async Task<IActionResult> Register([FromBody] RegisterRequest registerRequest)
         {
             if (await _userManager.FindByEmailAsync(registerRequest.Email) != null || await _userManager.FindByNameAsync(registerRequest.Username) != null)
+            {
                 return StatusCode(StatusCodes.Status204NoContent, new Response { Status = "Error", Message = "User already exists" });
+             }
 
             IdentityUser user = new IdentityUser()
             {
@@ -62,6 +67,7 @@ namespace WebAPI.Controllers
                 var error = "";
                 foreach (var item in result.Errors)
                 {
+                    _logger.LogError("User Register: "+item.Description.ToString());
                     error += item.Description.ToString();
                 }
                 return StatusCode(StatusCodes.Status400BadRequest, new Response { Status = "Error", Message = "Creation failed! Please check user details and try again\n"+error });
@@ -121,36 +127,5 @@ namespace WebAPI.Controllers
             return Unauthorized();
         }
 
-        // GET: api/<UserController>
-        [HttpGet]
-        public IEnumerable<string> Get()
-        {
-            return new string[] { "value1", "value2" };
-        }
-
-        // GET api/<UserController>/5
-        [HttpGet("{id}")]
-        public string Get(int id)
-        {
-            return "value";
-        }
-
-        // POST api/<UserController>
-        [HttpPost]
-        public void Post([FromBody] string value)
-        {
-        }
-
-        // PUT api/<UserController>/5
-        [HttpPut("{id}")]
-        public void Put(int id, [FromBody] string value)
-        {
-        }
-
-        // DELETE api/<UserController>/5
-        [HttpDelete("{id}")]
-        public void Delete(int id)
-        {
-        }
     }
 }
