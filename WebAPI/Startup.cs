@@ -40,6 +40,8 @@ namespace WebAPI
 
             services.AddControllers();
 
+            // add cache response
+            services.AddResponseCaching();
             // swagger 
             services.AddSwagger();
 
@@ -56,6 +58,9 @@ namespace WebAPI
             // Authentication
             services.AddAuth(Configuration);
 
+            // mapping
+            services.AddAutoMapper(typeof(Startup));
+
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -67,6 +72,8 @@ namespace WebAPI
                 app.UseSwagger();
                 app.UseSwaggerUI(c => c.SwaggerEndpoint("/swagger/v1/swagger.json", "WebAPI v1"));
             }
+
+            app.UseResponseCaching(); // cache 
 
             app.ConfigureExceptionHandler();
 
