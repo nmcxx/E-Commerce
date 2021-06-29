@@ -8,9 +8,9 @@ using WebAPI.Services.ColorService;
 
 namespace WebAPI.Extensions
 {
-    public static class DependencyInjection
+    public static class ScopedExtensions
     {
-        public static IServiceCollection AddDependencyInjection(this IServiceCollection services)
+        public static IServiceCollection AddScopedExtensions(this IServiceCollection services)
         {
             services.AddScoped<IColorService, ColorService>();
             services.AddScoped<ICategoryService, CategoryService>();

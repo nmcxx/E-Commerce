@@ -50,8 +50,8 @@ namespace WebAPI
             // DI Identity
             services.AddIdentity<IdentityUser, IdentityRole>().AddEntityFrameworkStores<ApplicationDbContext>().AddDefaultTokenProviders();
 
-            // DI 
-            services.AddDependencyInjection();
+            // DI scoped
+            services.AddScopedExtensions();
 
             // Authentication
             services.AddAuth(Configuration);
