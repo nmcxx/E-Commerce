@@ -24,8 +24,12 @@ namespace Common.Data
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
-            base.OnConfiguring(optionsBuilder);
-            optionsBuilder.UseSqlServer(ConnectionString);
+            // use multiple database
+            if (!optionsBuilder.IsConfigured)
+            {
+                base.OnConfiguring(optionsBuilder);
+                optionsBuilder.UseSqlServer(ConnectionString);
+            }
         }
     }
 }

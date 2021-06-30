@@ -16,10 +16,15 @@ namespace Common.Models
 
         public virtual ICollection<ProductDetails> ProductDetails { get; set; }
 
+
         public Color(string name)
         {
             ID = 0;
             Name = name;
+        }
+
+        public Color()
+        {
         }
     }
 }
