@@ -4,6 +4,109 @@
         <name>WebAPI</name>
     </assembly>
     <members>
+        <member name="M:WebAPI.Controllers.CategoryController.GetCategory">
+            <summary>
+            
+            </summary>
+            <param></param>
+            <returns>All category</returns>
+            <response code="200">Returns all item</response>
+        </member>
+        <member name="M:WebAPI.Controllers.CategoryController.GetCategory(System.Int32)">
+            <summary>
+            
+            </summary>
+            <param name="id" hidden="true"></param>
+            <returns>Returns a single color</returns>
+            <response code="200">Returns a single category</response>
+            <response code="404">If id category is not found</response>
+        </member>
+        <member name="M:WebAPI.Controllers.CategoryController.PutCategory(System.Int32,Common.Models.Category)">
+            <summary>
+            
+            </summary>
+            <remarks>
+            Sample request:
+            
+                PUT api/Category
+                {
+                    "id": 0,
+                    "name": "Red"
+                }
+            </remarks>
+            <param name="id" hide="true"></param>
+            <param name="category"></param>
+            <body examples="{'application/json' : {'id' : 0,'name' : 'string'}}"></body>
+            <returns>A updated color</returns>
+            <response code="204">if the category has updated</response>
+            <response code="404" examples="hide">If id category is not found</response>
+            <response code="400">If the id param is does not match id category</response>
+        </member>
+        <member name="M:WebAPI.Controllers.CategoryController.PostCategory(Common.Models.Category)">
+            <summary>
+            
+            </summary>
+            <remarks>
+            Sample request:
+            
+                POST api/Color
+                {
+                    "id" : 0,
+                    "name": "Shirt"
+                }
+            </remarks>
+            <param name="category"></param>
+            <returns>A newly created category</returns>
+            <response code="201" examples="{'application/json' : {'id' : 0, 'name' : 'string'}}">Returns the newly created item</response>
+            <response code="204">If name item is exists</response>
+            <response code="400">If the name field is null or not string</response>
+        </member>
+        <member name="M:WebAPI.Controllers.CategoryController.DeleteCategory(System.Int32)">
+            <summary>
+            
+            </summary>
+            <param name="id"></param>
+            <response code="204">if the category has deleted</response>
+            <response code="404">If id category is not found</response>
+        </member>
+        <member name="M:WebAPI.Controllers.ColorController.GetColor">
+            <summary>
+            
+            </summary>
+            <param></param>
+            <returns>All color</returns>
+            <response code="200">Returns all item</response>
+        </member>
+        <member name="M:WebAPI.Controllers.ColorController.GetColor(System.Int32)">
+            <summary>
+            
+            </summary>
+            <param name="id" hidden="true"></param>
+            <returns>Returns a single color</returns>
+            <response code="200">Returns a single color</response>
+            <response code="404">If id color is not found</response>
+        </member>
+        <member name="M:WebAPI.Controllers.ColorController.PutColor(System.Int32,Common.Models.Color)">
+            <summary>
+            
+            </summary>
+            <remarks>
+            Sample request:
+            
+                PUT api/Color
+                {
+                    "id": 0,
+                    "name": "Red"
+                }
+            </remarks>
+            <param name="id" hide="true"></param>
+            <param name="color"></param>
+            <body examples="{'application/json' : {'id' : 0,'name' : 'string'}}"></body>
+            <returns>A updated color</returns>
+            <response code="204">if the color has updated</response>
+            <response code="404" examples="hide">If id color is not found</response>
+            <response code="400">If the id param is does not match id color</response>
+        </member>
         <member name="M:WebAPI.Controllers.ColorController.PostColor(Common.Models.Color)">
             <summary>
             
@@ -16,11 +119,37 @@
                     "name": "Red"
                 }
             </remarks>
-            <param name="color" hide="true"></param>
+            <param name="color" hidden="true"></param>
             <returns>A newly created color</returns>
             <response code="201" examples="{'application/json' : {'name' : 'string'}}">Returns the newly created item</response>
             <response code="204">If name item is exists</response>
             <response code="400">If the name field is null or not string</response>
+        </member>
+        <member name="M:WebAPI.Controllers.ColorController.DeleteColor(System.Int32)">
+            <summary>
+            
+            </summary>
+            <param name="id"></param>
+            <returns>A deleted color</returns>
+            <response code="204">if the color has deleted</response>
+            <response code="404" examples="hide">If id color is not found</response>
+        </member>
+        <member name="M:WebAPI.Controllers.UserController.Register(Common.EntityRequest.RegisterRequest)">
+            <summary>
+            </summary>
+            <param name="registerRequest"></param>
+            <returns></returns>
+            <response code="204">User already exists</response>
+            <response code="200">User created successfully</response>
+            <response code="400">User details is not valid</response>
+        </member>
+        <member name="M:WebAPI.Controllers.UserController.Login(Common.EntityRequest.LoginRequest)">
+            <summary>
+            
+            </summary>
+            <param name="loginRequest"></param>
+            <returns></returns>
+            <response code="200"></response>
         </member>
     </members>
 </doc>

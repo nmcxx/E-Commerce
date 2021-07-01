@@ -1,8 +1,10 @@
-﻿using Common.Data;
+﻿using AutoMapper;
+using Common.Data;
 using Common.Models;
 using Common.ViewModels;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Logging;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -12,15 +14,25 @@ namespace WebAPI.Services.ColorService
 {
     public class ColorService : ControllerBase, IColorService
     {
-        private readonly  ApplicationDbContext _context;
+        private readonly ApplicationDbContext _context;
+        private readonly ILogger<ColorService> _logger;
+        private readonly IMapper _mapper;
 
-        public ColorService(ApplicationDbContext context)
+        public ColorService(ApplicationDbContext context, ILogger<ColorService> logger, IMapper mapper)
         {
             _context = context;
+            _logger = logger;
+            _mapper = mapper;
+            _logger.LogInformation("Hello world");
         }
 
         public async Task<ActionResult<ColorViewModel>> AddColor(Color color)
         {
+
+            _logger.LogError("Nlog injected into color service");
+            _logger.LogInformation("Hello world");
+            _logger.LogWarning("test warning");
+            _logger.LogTrace("hehe");
             if (ColorExistsByName(color.Name))
             {
                 return NoContent();
@@ -28,12 +40,7 @@ namespace WebAPI.Services.ColorService
             _context.Color.Add(color);
             await _context.SaveChangesAsync();
 
-
-            ColorViewModel result = new ColorViewModel
-            {
-                Id = color.ID,
-                Name = color.Name
-            };
+            ColorViewModel result = _mapper.Map<ColorViewModel>(color);
 
             return Created("test",result);
         }
@@ -107,6 +114,10 @@ namespace WebAPI.Services.ColorService
 
         public async Task<ActionResult<IEnumerable<ColorViewModel>>> GetAllColor()
         {
+            _logger.LogError("error log");
+            _logger.LogInformation("info log");
+            _logger.LogWarning("warning log");
+            _logger.LogTrace("trace log");
             return await _context.Color
                .Select(x => new ColorViewModel
                {

@@ -24,9 +24,12 @@ namespace Tests.WebAPITests
 
         //private readonly Mock<IColorService> mock = new Mock<IColorService>();
         //private readonly 
+        #region Property
         private readonly Mock<ILogger<ColorService>> logger = new Mock<ILogger<ColorService>>();
         private readonly Mock<IMapper> mapper = new Mock<IMapper>();
+        #endregion
 
+        #region Get database context
         private async Task<ApplicationDbContext> GetDatabaseContext()
         {
             var options = new DbContextOptionsBuilder<ApplicationDbContext>()
@@ -48,7 +51,9 @@ namespace Tests.WebAPITests
 
             return context;
         }
+        #endregion
 
+        #region Get ColorService
         private async Task<ColorService> GetColorService()
         {
             var dbContext = await GetDatabaseContext();
@@ -56,7 +61,9 @@ namespace Tests.WebAPITests
             ColorService colorService = new ColorService(dbContext, logger.Object, mapper.Object);
             return colorService;
         }
+        #endregion
 
+        #region Get all color on database
         [Fact]
         public async void GetAllColor()
         {
@@ -92,7 +99,9 @@ namespace Tests.WebAPITests
             //Assert.False(result.Equals(HttpStatusCode.BadRequest));
             //Assert.False(result.Equals(HttpStatusCode.InternalServerError));
         }
+        #endregion
 
+        #region Add single color and returns same color
         [Fact]
         public async void Add_SingleColor_ReturnsSameColor()
         {
@@ -109,7 +118,9 @@ namespace Tests.WebAPITests
             Assert.NotNull(status);
             
         }
+        #endregion
 
+        #region Get color by id and returns same color by id
         [Fact]
         public async void Get_ColorById_ReturnsSameColorById()
         {
@@ -119,5 +130,6 @@ namespace Tests.WebAPITests
             Assert.Equal(1, result.Value.ID);
             /////////// mong doi //////// dau ra
         }
+        #endregion
     }
 }
