@@ -1,0 +1,65 @@
+﻿@page
+@model WebApp.Pages.Colors.IndexModel
+
+@{
+    ViewData["Title"] = "Index";
+}
+
+<h1>Index</h1>
+
+<form asp-page="./Index" method="get">
+    <div class="form-actions no-color">
+        <p>
+            <input type="text" name="search" value="@Model.CurrentSearch" />
+            <input type="submit" value="Search" class="btn btn-primary" /> |
+            <a asp-page="./Index">Back to full List</a>
+        </p>
+    </div>
+</form>
+
+<p>
+    <a asp-page="Create">Create New</a>
+</p>
+<table class="table">
+    <thead>
+        <tr>
+            <th>
+                @Html.DisplayNameFor(model => model.Colors[0].Name)
+            </th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var item in Model.Colors)
+        {
+            <tr>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Name)
+                </td>
+                <td>
+                    <a asp-page="./Edit" asp-route-id="@item.ID">Edit</a> |
+                    <a asp-page="./Details" asp-route-id="@item.ID">Details</a> |
+                    <a asp-page="./Delete" asp-route-id="@item.ID">Delete</a>
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>
+
+@{
+    var prevDisabled = !Model.Colors.HasPreviousPage ? "disabled" : "";
+    var nextDisabled = !Model.Colors.HasNextPage ? "disabled" : "";
+}
+
+<a asp-page="./Index"
+   asp-route-search="@Model.CurrentSearch"
+   asp-route-pageIndex="@(Model.Colors.PageIndex - 1)"
+   class="btn btn-primary @prevDisabled">
+    Previous
+</a>
+<a asp-page="./Index"
+   asp-route-search="@Model.CurrentSearch"
+   asp-route-pageIndex="@(Model.Colors.PageIndex + 1)"
+   class="btn btn-primary @nextDisabled">
+    Next
+</a>
