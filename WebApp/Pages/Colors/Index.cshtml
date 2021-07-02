@@ -3,6 +3,9 @@
 
 @{
     ViewData["Title"] = "Index";
+    int startPageOfIndex = Model.Colors.StartPageOfIndex;
+    int lastPageOfIndex = Model.Colors.LastPageOfIndex;
+    int pageIndex = Model.Colors.PageIndex;
 }
 
 <h1>Index</h1>
@@ -46,12 +49,57 @@
     </tbody>
 </table>
 
+@*@{
+        var prevDisabled = !Model.Colors.HasPreviousPage ? "disabled" : "";
+        var nextDisabled = !Model.Colors.HasNextPage ? "disabled" : "";
+}*@
+
 @{
-    var prevDisabled = !Model.Colors.HasPreviousPage ? "disabled" : "";
-    var nextDisabled = !Model.Colors.HasNextPage ? "disabled" : "";
+    var firstDisabled = !Model.Colors.HasPreviousFirstPage ? "disabled" : "";
+    var endDisabled = !Model.Colors.HasNextEndPage ? "disabled" : "";
 }
 
-<a asp-page="./Index"
+<nav aria-label="Page navigation">
+    <ul class="pagination">
+        <li class="page-item">
+            <a class="btn btn-primary @firstDisabled"  
+                asp-page="./Index"
+                asp-route-search="@Model.CurrentSearch"
+                asp-route-pageIndex="1"
+                aria-label="Previous">
+                <span aria-hidden="true">&laquo;</span>
+                <span class="sr-only">Previous</span>
+            </a>
+        </li>
+        @{
+
+            for (int i = startPageOfIndex; i <= lastPageOfIndex; i++)
+            {
+                var pageIndexActive = i == pageIndex ? "active" : "";
+                <li class="page-item @pageIndexActive">
+                    <a class="page-link page" 
+                       asp-page="./Index"
+                       asp-route-search="@Model.CurrentSearch"
+                       asp-route-pageIndex="@i">
+                        @i
+                    </a>
+                </li>
+            }
+        }
+        <li class="page-item">
+            <a class="btn btn-primary @endDisabled"  
+                asp-page="./Index"
+                asp-route-search="@Model.CurrentSearch"
+                asp-route-pageIndex="@Model.Colors.TotalPages"
+                aria-label="Next">
+                <span aria-hidden="true">&raquo;</span>
+                <span class="sr-only">Next</span>
+            </a>
+        </li>
+    </ul>
+</nav>
+
+@*<a asp-page="./Index"
    asp-route-search="@Model.CurrentSearch"
    asp-route-pageIndex="@(Model.Colors.PageIndex - 1)"
    class="btn btn-primary @prevDisabled">
@@ -62,4 +110,4 @@
    asp-route-pageIndex="@(Model.Colors.PageIndex + 1)"
    class="btn btn-primary @nextDisabled">
     Next
-</a>
+</a>*@

@@ -29,7 +29,33 @@ namespace WebApp.Pages.Colors
 
         public async Task OnGetAsync(string search,int? pageIndex)
         {
+            //System.Diagnostics.Debug.WriteLine(1%3);
+            //System.Diagnostics.Debug.WriteLine(2 % 3);
+            //System.Diagnostics.Debug.WriteLine(3 % 3);
+            //System.Diagnostics.Debug.WriteLine(4 % 3);
+            //System.Diagnostics.Debug.WriteLine(5 % 3);
+            //System.Diagnostics.Debug.WriteLine(6 % 3);
+
+            //System.Diagnostics.Debug.WriteLine("\n"+1.0 / 3.0);
+            //System.Diagnostics.Debug.WriteLine(2.0 / 3.0);
+            //System.Diagnostics.Debug.WriteLine(3.0 / 3.0);
+            //System.Diagnostics.Debug.WriteLine(4.0 / 3.0);
+            //System.Diagnostics.Debug.WriteLine(5.0 / 3.0);
+            //System.Diagnostics.Debug.WriteLine(6.0 / 3.0+"\n");
+            //int b = 3;
+            //int a = b-1 <= 0 ? 1 : b-1;
+            //System.Diagnostics.Debug.WriteLine(a);
+            //b = 2;
+            //a = b - 1 <= 0 ? 1 : b - 1;
+            //System.Diagnostics.Debug.WriteLine(a);
+            //b = 1;
+            //a = b - 1 <= 0 ? 1 : b - 1;
+            //System.Diagnostics.Debug.WriteLine(a);
+
+
             //System.Diagnostics.Debug.WriteLine(_configuration.GetValue("PageSize", 3));
+
+
             CurrentSearch = search;
             var pageSize = _configuration.GetValue("PageSize", 4);
             IQueryable<Color> colorsIQ = from s in _context.Color select s;
